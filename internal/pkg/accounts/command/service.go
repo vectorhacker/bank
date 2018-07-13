@@ -7,7 +7,7 @@ import (
 
 	"github.com/satori/go.uuid"
 	"github.com/vectorhacker/bank/internal/pkg/accounts"
-	"github.com/vectorhacker/bank/internal/pkg/events/domain"
+	domain "github.com/vectorhacker/bank/internal/pkg/events/accounts"
 
 	e "github.com/vectorhacker/bank/internal/pkg/events"
 
@@ -120,7 +120,10 @@ func (s *Service) DebitAccount(
 }
 
 // CreditAccount implements the proto.AccountsCommandServer interface.
-func (s *Service) CreditAccount(ctx context.Context, r *pb.CreditAccountRequest) (*pb.CreditAccountResponse, error) {
+func (s *Service) CreditAccount(
+	ctx context.Context,
+	r *pb.CreditAccountRequest,
+) (*pb.CreditAccountResponse, error) {
 
 	id, err := uuid.FromString(r.ID)
 	if err != nil {

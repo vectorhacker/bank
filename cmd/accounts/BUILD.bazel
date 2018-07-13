@@ -10,7 +10,7 @@ go_library(
         "//internal/pkg/accounts:go_default_library",
         "//internal/pkg/accounts/command:go_default_library",
         "//internal/pkg/events:go_default_library",
-        "//internal/pkg/events/domain:go_default_library",
+        "//internal/pkg/events/accounts:go_default_library",
         "//pb/accounts:go_default_library",
         "//vendor/github.com/hashicorp/consul/api:go_default_library",
         "//vendor/github.com/jinzhu/gorm:go_default_library",

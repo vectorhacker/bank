@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"log"
 	"net"
@@ -13,7 +12,7 @@ import (
 	"github.com/hashicorp/consul/api"
 	"github.com/vectorhacker/bank/internal/pkg/accounts"
 	"github.com/vectorhacker/bank/internal/pkg/events"
-	"github.com/vectorhacker/bank/internal/pkg/events/domain"
+	domain "github.com/vectorhacker/bank/internal/pkg/events/accounts"
 
 	"github.com/jinzhu/gorm"
 
@@ -31,6 +30,24 @@ var (
 	bind       = flag.String("bind", os.Getenv("BIND_ADDR"), "bind to address")
 	id         = flag.String("id", os.Getenv("SERVICE_ID"), "The service id")
 )
+
+func serviceRegistration(address string, port int, client *api.Client) error {
+	registration := &api.AgentServiceRegistration{
+		ID:      *id,
+		Name:    "accounts.AccountsCommand",
+		Tags:    []string{"grpc", "command-side"},
+		Address: address,
+		Port:    port,
+	}
+
+	return client.Agent().ServiceRegister(registration)
+}
+
+func deregisterService(client *api.Client) {
+	if err := client.Agent().ServiceDeregister(*id); err != nil {
+		log.Fatal(err)
+	}
+}
 
 func main() {
 	flag.Parse()
@@ -55,30 +72,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+	brokerList := strings.Split(*brokers, ",")
+	log.Printf("Kafka brokers: %s", strings.Join(brokerList, ", "))
+
 	config := api.DefaultConfig()
 	config.Address = *consul
 	client, err := api.NewClient(config)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	service := &api.AgentServiceRegistration{
-		ID:      *id,
-		Name:    "accounts.AccountsCommand",
-		Tags:    []string{"grpc", "command-side"},
-		Address: addr[0],
-		Port:    port,
-	}
-
-	err = client.Agent().ServiceRegister(service)
-	if err != nil {
+	if err := serviceRegistration(addr[0], port, client); err != nil {
 		log.Fatal(err)
 	}
-
-	defer client.Agent().ServiceDeregister(*id)
-
-	brokerList := strings.Split(*brokers, ",")
-	log.Printf("Kafka brokers: %s", strings.Join(brokerList, ", "))
+	defer deregisterService(client)
 
 	server := grpc.NewServer()
 
@@ -93,6 +99,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// create event dispatcher
 	dispatcher, err := events.NewDispatcher(
 		brokerList,
 		"accounts",
@@ -102,6 +109,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// create event consumer
 	consumer := events.NewConsumer(
 		brokerList,
 		[]string{"accounts"},
@@ -114,37 +122,39 @@ func main() {
 		accounts.NewUpdateHandler(db),
 	)
 
+	// register grpc service
 	svc := command.New(db, dispatcher)
 	pb.RegisterAccountsCommandServer(server, svc)
 	reflection.Register(server)
 
-	lis, err := net.Listen("tcp", *bind)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	errChan := make(chan error)
+	errChan := make(chan error, 10)
 	signalChan := make(chan os.Signal)
 
 	signal.Notify(signalChan, os.Kill, os.Interrupt)
 
+	// Start grpc server
 	go func() {
+		lis, err := net.Listen("tcp", *bind)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer server.GracefulStop()
 		errChan <- server.Serve(lis)
 	}()
 
-	ctx := context.Background()
-	ctx, close := context.WithCancel(ctx)
-	defer close()
-
+	// Start kafka update consumer
 	go func() {
-		errChan <- consumer.Start(ctx)
+		defer consumer.Stop()
+		errChan <- consumer.Start()
 	}()
 
+	// listen for errors or signal
 	select {
 	case s := <-signalChan:
+		// handle graceful exit
 		log.Println("exiting", s)
-
-		server.GracefulStop()
+		os.Exit(0)
 	case err := <-errChan:
 		if err != nil {
 			log.Fatal(err)

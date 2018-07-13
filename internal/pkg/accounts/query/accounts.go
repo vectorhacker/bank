@@ -3,7 +3,7 @@ package query
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/vectorhacker/bank/internal/pkg/events"
-	"github.com/vectorhacker/bank/internal/pkg/events/domain"
+	domain "github.com/vectorhacker/bank/internal/pkg/events/accounts"
 )
 
 type Accounts struct {

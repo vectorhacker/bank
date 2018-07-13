@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/vectorhacker/bank/internal/pkg/events"
-	"github.com/vectorhacker/bank/internal/pkg/events/domain"
+	domain "github.com/vectorhacker/bank/internal/pkg/events/accounts"
 )
 
 // UpdateHandler implements the event.Handler interface. It
@@ -47,12 +47,10 @@ func (h *UpdateHandler) On(event events.Event) error {
 		})
 
 	case *domain.AccountDebited:
-		log.Println("account debited")
 		account := Account{}
 		db = db.Where(Account{ID: ev.AggregateID()}).First(&account)
 
 		newBalance := account.Balance - ev.Amount
-		log.Println("new balance", newBalance)
 		db = db.Model(&account).Update("Balance", newBalance)
 	}
 

@@ -6,8 +6,7 @@ routers:
   - protocol: h2
     label: grpc_in
     dtab: |
-      /svc                                          => /#/io.l5d.consul/dc1/grpc;
-      /svc/grpc.reflection.v1alpha.ServerReflection =>  /svc/accounts.AccountsCommand;
+      /svc => /#/io.l5d.consul/dc1/grpc;
     identifier:
       kind: io.l5d.header.path
       segments: 1

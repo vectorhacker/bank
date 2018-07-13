@@ -10,7 +10,7 @@ go_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "//internal/pkg/events:go_default_library",
-        "//internal/pkg/events/domain:go_default_library",
+        "//internal/pkg/events/accounts:go_default_library",
         "//vendor/github.com/jinzhu/gorm:go_default_library",
         "//vendor/github.com/satori/go.uuid:go_default_library",
     ],

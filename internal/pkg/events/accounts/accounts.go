@@ -1,4 +1,4 @@
-package domain
+package accounts
 
 import (
 	"github.com/satori/go.uuid"
@@ -25,4 +25,18 @@ type AccountDebited struct {
 	TransactionID uuid.UUID
 	Description   string
 	Amount        int64
+}
+
+type AccountClosed struct {
+	events.Model
+}
+
+type AccountDebitFailed struct {
+	AccountDebited
+	Reason string
+}
+
+type AccountCreditFailed struct {
+	AccountCredited
+	Reason string
 }
