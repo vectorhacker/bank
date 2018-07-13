@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package accounts;
+
+service AccountsQuery {
+    rpc ListAccounts (ListAccountsRequest) returns (stream AccountInfo);
+    rpc ListTransactions (ListTransactionsRequest) returns (stream TransactionInfo);
+}
+
+
+message ListAccountsRequest {
+    string ID = 1;
+}
+
+message AccountInfo {
+    string ID = 1;
+    int64 Balance = 2;
+}
+
+message ListTransactionsRequest {
+    string accountID = 1;
+}
+
+enum TransactionType {
+    Credit = 0;
+    Debit = 1;
+}
+
+message TransactionInfo {
+    string accountID = 1;
+    int64 amount = 2;
+    TransactionType Type = 3;
+}

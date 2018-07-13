@@ -1,0 +1,83 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:4.1.0
+    restart: always
+    networks: 
+      - bank
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+  kafka:
+    image: confluentinc/cp-kafka:4.1.0
+    restart: always
+    networks: 
+      - bank
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  topics:
+    image: confluentinc/cp-kafka:4.1.0
+    networks: 
+      - bank
+    depends_on:
+      - zookeeper
+    command: kafka-topics --create --topic accounts --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+  postgres:
+    image: postgres
+    restart: always
+    networks:
+      - bank
+    environment:
+      POSTGRES_PASSWORD: password123
+      POSTGRES_USER: bank
+      POSTGRES_DB: bank
+    ports:
+      - 5432:5432
+    
+  consul:
+    image: consul:1.2.0
+    restart: always
+    networks:
+      - bank
+    environment: 
+      CONSUL_LOCAL_CONFIG: '{"leave_on_terminate": true}'
+    ports: 
+      - 8500:8500
+  
+  linkerd:
+    image: buoyantio/linkerd:1.4.2
+    networks:
+      - bank
+    restart: always
+    command: /config.yaml
+    depends_on:
+      - consul
+    ports:
+      - 9990:9990 
+      - 4141:4141
+    volumes:
+      - ./linkerd-local.yaml:/config.yaml
+
+  accounts:
+    image: bank/accounts:accounts
+    networks:
+      - bank
+    restart: always
+    depends_on: 
+      - consul
+      - kafka
+      - postgres
+    environment:
+      CONSUL_ADDR: consul:8500
+      DB_CONNECTION: 'postgres://bank:password123@postgres:5432/bank?sslmode=disable'
+      KAFKA_PEERS: kafka:9092
+      SERVICE_ID: accounts1
+      BIND_ADDR: accounts:5000
+
+networks:
+  bank:
+    driver: bridge

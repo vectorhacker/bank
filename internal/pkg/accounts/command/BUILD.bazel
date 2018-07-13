@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["service.go"],
+    importpath = "github.com/vectorhacker/bank/internal/pkg/accounts/command",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/pkg/accounts:go_default_library",
+        "//internal/pkg/events:go_default_library",
+        "//internal/pkg/events/domain:go_default_library",
+        "//pb/accounts:go_default_library",
+        "//vendor/github.com/jinzhu/gorm:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+    ],
+)

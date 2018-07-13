@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package accounts;
+
+service AccountsCommand {
+    rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse);
+    rpc DebitAccount(DebitAccountRequest) returns (DebitAccountResponse);
+    rpc CreditAccount(CreditAccountRequest) returns (CreditAccountResponse);
+}
+
+message CreateAccountRequest {
+    int64 initialDeposit = 1;
+}
+
+message CreateAccountResponse {
+    string ID = 1;
+}
+
+message DebitAccountRequest {
+    string ID = 1;
+    int64 amount = 2;
+    string description = 3;
+}
+
+message DebitAccountResponse {
+    string transactionID = 1;
+}
+
+message CreditAccountRequest {
+    string ID = 1;
+    int64 amount = 2;
+    string description = 3;
+}
+
+message CreditAccountResponse {
+    string transactionID = 1;
+}

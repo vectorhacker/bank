@@ -1,0 +1,13 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+
+go_image(
+    name = "accounts",
+    # Override the base image.
+    base = "@alpine_base//image",
+    embed = ["//cmd/accounts:go_default_library"],
+    goarch = "amd64",
+    goos = "linux",
+    pure = "on",
+)
