@@ -90,7 +90,7 @@ func (c *Consumer) Start() error {
 			}
 
 			// only mark offset if successfully processed message
-			consumer.MarkOffset(msg, "")
+			// consumer.MarkOffset(msg, "")
 		case <-c.stop:
 			return nil
 		}
