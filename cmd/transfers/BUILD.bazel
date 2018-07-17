@@ -1,0 +1,26 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "github.com/vectorhacker/bank/cmd/transfers",
+    deps = [
+        "//internal/pkg/events:go_default_library",
+        "//internal/pkg/events/transfers:go_default_library",
+        "//internal/pkg/transfers:go_default_library",
+        "//pb/accounts:go_default_library",
+        "//pb/transfers:go_default_library",
+        "//vendor/github.com/hashicorp/consul/api:go_default_library",
+        "//vendor/github.com/jinzhu/gorm:go_default_library",
+        "//vendor/github.com/jinzhu/gorm/dialects/postgres:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+        "//vendor/google.golang.org/grpc/reflection:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "transfers",
+    embed = [":go_default_library"],
+)

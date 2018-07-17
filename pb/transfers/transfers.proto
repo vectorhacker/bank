@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package transfers;
+
+service Transfers {
+    rpc BeginTransfer (BeginTransferRequest) returns (BeginTransferResponse);
+    // rpc CancelTransfer (CancelTransferRequest) returns (CancelTransferResponse);
+}
+
+message BeginTransferRequest {
+    string fromAccountID = 1;
+    string toAccountID = 2;
+    int64 amount = 3;
+    string description = 4;
+}
+    
+message BeginTransferResponse {
+    string ID = 1;
+}
+
+// message CancelTransferRequest {
+//     string ID = 1;
+// }
+
+// message CancelTransferResponse {
+// }

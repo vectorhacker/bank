@@ -7,14 +7,19 @@ import (
 )
 
 // Dispatcher is responsible for sending messages to the event log
-type Dispatcher struct {
+type Dispatcher interface {
+	Dispatch(...Event) error
+}
+
+// KafkaDispatcher dispatches events to the kafka event log
+type KafkaDispatcher struct {
 	serializer Serializer
 	producer   sarama.SyncProducer
 	topic      string
 }
 
-// NewDispatcher creates a new dispatcher
-func NewDispatcher(brokerList []string, topic string, serializer Serializer) (*Dispatcher, error) {
+// NewKafkaDispatcher creates a new dispatcher for Kafka
+func NewKafkaDispatcher(brokerList []string, topic string, serializer Serializer) (*KafkaDispatcher, error) {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 10
@@ -25,7 +30,7 @@ func NewDispatcher(brokerList []string, topic string, serializer Serializer) (*D
 		return nil, err
 	}
 
-	return &Dispatcher{
+	return &KafkaDispatcher{
 		topic:      topic,
 		producer:   producer,
 		serializer: serializer,
@@ -33,7 +38,7 @@ func NewDispatcher(brokerList []string, topic string, serializer Serializer) (*D
 }
 
 // Dispatch dispatches messages to the event log
-func (d Dispatcher) Dispatch(events ...Event) error {
+func (d *KafkaDispatcher) Dispatch(events ...Event) error {
 
 	messages := make([]*sarama.ProducerMessage, len(events))
 	for i, event := range events {
@@ -60,6 +65,6 @@ func (d Dispatcher) Dispatch(events ...Event) error {
 }
 
 // Close closes the connection to the event log
-func (d Dispatcher) Close() error {
+func (d *KafkaDispatcher) Close() error {
 	return d.producer.Close()
 }

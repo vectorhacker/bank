@@ -4,8 +4,8 @@ package accounts;
 
 service AccountsCommand {
     rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse);
-    rpc DebitAccount(DebitAccountRequest) returns (DebitAccountResponse);
-    rpc CreditAccount(CreditAccountRequest) returns (CreditAccountResponse);
+    rpc DebitAccount (DebitAccountRequest) returns (DebitAccountResponse);
+    rpc CreditAccount (CreditAccountRequest) returns (CreditAccountResponse);
 }
 
 message CreateAccountRequest {
@@ -20,6 +20,8 @@ message DebitAccountRequest {
     string ID = 1;
     int64 amount = 2;
     string description = 3;
+    int64 timestamp = 4;
+    string correlationID = 5;
 }
 
 message DebitAccountResponse {
@@ -30,6 +32,8 @@ message CreditAccountRequest {
     string ID = 1;
     int64 amount = 2;
     string description = 3;
+    int64 timestamp = 4;
+    string correlationID = 5;
 }
 
 message CreditAccountResponse {

@@ -25,7 +25,7 @@ services:
       - bank
     depends_on:
       - zookeeper
-    command: kafka-topics --create --topic accounts --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+    command: kafka-topics --create --topic accounts --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181 && kafka-topics --create --topic transfers --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:218
   postgres:
     image: postgres
     restart: always
@@ -77,6 +77,22 @@ services:
       KAFKA_PEERS: kafka:9092
       SERVICE_ID: accounts1
       BIND_ADDR: accounts:5000
+  transfers:
+    image: bank/transfers:transfers
+    networks:
+      - bank
+    restart: always
+    depends_on: 
+      - consul
+      - kafka
+      - postgres
+    environment:
+      CONSUL_ADDR: consul:8500
+      DB_CONNECTION: 'postgres://bank:password123@postgres:5432/bank?sslmode=disable'
+      KAFKA_PEERS: kafka:9092
+      SERVICE_ID: transfers1
+      BIND_ADDR: transfers:5000
+      GRPC_DIAL: linkerd:4141
 
 networks:
   bank:

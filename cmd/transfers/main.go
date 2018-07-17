@@ -10,15 +10,13 @@ import (
 	"strings"
 
 	"github.com/hashicorp/consul/api"
-	"github.com/vectorhacker/bank/internal/pkg/accounts"
-	"github.com/vectorhacker/bank/internal/pkg/events"
-	domain "github.com/vectorhacker/bank/internal/pkg/events/accounts"
-
 	"github.com/jinzhu/gorm"
-
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	command "github.com/vectorhacker/bank/internal/pkg/accounts/command"
-	pb "github.com/vectorhacker/bank/pb/accounts"
+	"github.com/vectorhacker/bank/internal/pkg/events"
+	td "github.com/vectorhacker/bank/internal/pkg/events/transfers"
+	"github.com/vectorhacker/bank/internal/pkg/transfers"
+	accountsPb "github.com/vectorhacker/bank/pb/accounts"
+	pb "github.com/vectorhacker/bank/pb/transfers"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -29,13 +27,14 @@ var (
 	consul     = flag.String("consul", os.Getenv("CONSUL_ADDR"), "The consul address to connect to")
 	bind       = flag.String("bind", os.Getenv("BIND_ADDR"), "bind to address")
 	id         = flag.String("id", os.Getenv("SERVICE_ID"), "The service id")
+	grpcDial   = flag.String("dial", os.Getenv("GRPC_DIAL"), "The grpc service endpoint")
 )
 
 func serviceRegistration(address string, port int, client *api.Client) error {
 	registration := &api.AgentServiceRegistration{
 		ID:      *id,
-		Name:    "accounts.AccountsCommand",
-		Tags:    []string{"grpc", "command-side"},
+		Name:    "transfers.Transfers",
+		Tags:    []string{"grpc", "sagas"},
 		Address: address,
 		Port:    port,
 	}
@@ -95,14 +94,14 @@ func main() {
 
 	defer db.Close()
 
-	if err := db.AutoMigrate(&accounts.Account{}).Error; err != nil {
+	if err := db.AutoMigrate(&transfers.Transfer{}).Error; err != nil {
 		log.Fatal(err)
 	}
 
 	// create event dispatcher
 	dispatcher, err := events.NewKafkaDispatcher(
 		brokerList,
-		"accounts",
+		"transfers",
 		events.NewJSONSerializer(),
 	)
 	if err != nil {
@@ -111,22 +110,34 @@ func main() {
 
 	defer dispatcher.Close()
 
+	cc, err := grpc.Dial(*grpcDial, grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	accounts := accountsPb.NewAccountsCommandClient(cc)
+
 	// create event consumer
 	consumer := events.NewConsumer(
 		brokerList,
-		[]string{"accounts"},
-		"accounts-command",
+		[]string{"transfers"},
+		"transfers",
 		events.NewJSONSerializer(
-			&domain.AccountCreated{},
-			&domain.AccountCredited{},
-			&domain.AccountDebited{},
+			&td.TransferCreditCompleted{},
+			&td.TransferDebitCompleted{},
+			&td.TransferBegun{},
+			&td.TransferCompleted{},
+			&td.TransferCreditAccountBegun{},
+			&td.TransferCreditFailed{},
+			&td.TransferDebitAccountBegun{},
+			&td.TransferDebitFailed{},
 		),
-		accounts.NewUpdateHandler(db),
+		transfers.NewExecutor(db, dispatcher, accounts),
 	)
 
 	// register grpc service
-	svc := command.New(db, dispatcher)
-	pb.RegisterAccountsCommandServer(server, svc)
+	svc := transfers.NewService(dispatcher)
+	pb.RegisterTransfersServer(server, svc)
 	reflection.Register(server)
 
 	errChan := make(chan error, 10)
@@ -162,4 +173,5 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+
 }

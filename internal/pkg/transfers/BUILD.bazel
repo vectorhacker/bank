@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "saga_executor.go",
+        "service.go",
+        "transfer.go",
+    ],
+    importpath = "github.com/vectorhacker/bank/internal/pkg/transfers",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/pkg/events:go_default_library",
+        "//internal/pkg/events/transfers:go_default_library",
+        "//pb/accounts:go_default_library",
+        "//pb/transfers:go_default_library",
+        "//vendor/github.com/jinzhu/gorm:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+    ],
+)

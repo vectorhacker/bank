@@ -1,6 +1,8 @@
 package events
 
 import (
+	"time"
+
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -8,6 +10,7 @@ import (
 type Model struct {
 	EventAggregateID uuid.UUID `json:"aggregate_id"`
 	EventID          uuid.UUID `json:"id"`
+	EventAt          time.Time `json:"timestamp"`
 }
 
 // AggregateID implements the Event interface. It returns the
@@ -21,8 +24,28 @@ func (m Model) ID() uuid.UUID {
 	return m.EventID
 }
 
+func (m Model) At() time.Time {
+	return m.EventAt
+}
+
 // Event represents an Event in the System
 type Event interface {
 	AggregateID() uuid.UUID
 	ID() uuid.UUID
+	At() time.Time
+}
+
+// Events is an array of event
+type Events []Event
+
+func (e Events) Len() int {
+	return len(e)
+}
+
+func (e Events) Swap(a, b int) {
+	e[a], e[b] = e[b], e[a]
+}
+
+func (e Events) Less(a, b int) bool {
+	return e[a].At().After(e[b].At())
 }

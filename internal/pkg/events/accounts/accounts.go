@@ -15,6 +15,7 @@ type AccountCreated struct {
 type AccountCredited struct {
 	events.Model
 	TransactionID uuid.UUID
+	CorrelationID string
 	Description   string
 	Amount        int64
 }
@@ -23,20 +24,11 @@ type AccountCredited struct {
 type AccountDebited struct {
 	events.Model
 	TransactionID uuid.UUID
+	CorrelationID string
 	Description   string
 	Amount        int64
 }
 
 type AccountClosed struct {
 	events.Model
-}
-
-type AccountDebitFailed struct {
-	AccountDebited
-	Reason string
-}
-
-type AccountCreditFailed struct {
-	AccountCredited
-	Reason string
 }

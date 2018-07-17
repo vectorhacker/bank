@@ -9,6 +9,7 @@ load(
 
 DOCKERIZED_IMAGES = {
     "bank/accounts:accounts": "//build/package:accounts",
+    "bank/transfers:transfers": "//build/package:transfers",
 }
 
 container_bundle(

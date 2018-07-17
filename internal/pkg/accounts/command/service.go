@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"time"
 
 	"github.com/satori/go.uuid"
 	"github.com/vectorhacker/bank/internal/pkg/accounts"
@@ -24,10 +25,10 @@ var (
 // Service implements the proto.AccountsCommandServer interface.
 type Service struct {
 	db         *gorm.DB
-	dispatcher *e.Dispatcher
+	dispatcher e.Dispatcher
 }
 
-func New(db *gorm.DB, dispatcher *e.Dispatcher) *Service {
+func New(db *gorm.DB, dispatcher e.Dispatcher) *Service {
 	return &Service{
 		db:         db,
 		dispatcher: dispatcher,
@@ -46,6 +47,7 @@ func (s *Service) CreateAccount(
 		Model: e.Model{
 			EventAggregateID: uuid.Must(uuid.NewV4()),
 			EventID:          uuid.Must(uuid.NewV4()),
+			EventAt:          time.Now(),
 		},
 	}
 	events = append(events, created)
@@ -55,6 +57,7 @@ func (s *Service) CreateAccount(
 			Model: e.Model{
 				EventAggregateID: created.AggregateID(),
 				EventID:          uuid.Must(uuid.NewV4()),
+				EventAt:          time.Now(),
 			},
 			Amount:        r.InitialDeposit,
 			TransactionID: uuid.Must(uuid.NewV4()),
@@ -104,6 +107,7 @@ func (s *Service) DebitAccount(
 			EventID:          uuid.Must(uuid.NewV4()),
 		},
 		TransactionID: uuid.Must(uuid.NewV4()),
+		CorrelationID: r.CorrelationID,
 		Amount:        r.Amount,
 		Description:   r.Description,
 	}
@@ -147,6 +151,7 @@ func (s *Service) CreditAccount(
 			EventID:          uuid.Must(uuid.NewV4()),
 		},
 		TransactionID: uuid.Must(uuid.NewV4()),
+		CorrelationID: r.CorrelationID,
 		Amount:        r.Amount,
 		Description:   r.Description,
 	}
