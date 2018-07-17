@@ -48,3 +48,7 @@ type TransferCreditFailed struct {
 type TransferCompleted struct {
 	events.Model
 }
+
+type TransferFailed struct {
+	events.Model
+}

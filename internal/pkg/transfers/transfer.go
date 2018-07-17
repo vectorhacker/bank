@@ -26,6 +26,7 @@ const (
 	Begun               = "begun"
 	Transfering         = "transfering"
 	Completed           = "completed"
+	Failed              = "failed"
 )
 
 // Transfer representation
@@ -65,6 +66,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 				},
 			},
 		}, nil
+
 	case *td.TransferDebitAccountBegun:
 		log.Println("Debiting transfer", t.ID.String())
 		if t.State != Begun {
@@ -105,6 +107,14 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 				TransactionID: response.TransactionID,
 			},
 		}, nil
+
+	case *td.TransferDebitFailed:
+		log.Println("Debit failed", t.ID.String())
+		if t.State != Transfering {
+			return nil, ErrInvalidOperation
+		}
+
+		t.State = Failed
 
 	case *td.TransferDebitCompleted:
 		log.Println("Debited transfer", t.ID.String())
@@ -176,6 +186,36 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 				},
 			},
 		}, nil
+
+	case *td.TransferCreditFailed:
+		log.Println("Credited transfer failed", t.ID.String())
+		if t.State != Transfering {
+			return nil, ErrInvalidOperation
+		}
+
+		ctx := context.Background()
+		for {
+			_, err := t.accounts.CreditAccount(ctx, &pb.CreditAccountRequest{
+				ID:            t.FromAccount.String(),
+				CorrelationID: t.ID.String(),
+				Amount:        t.Amount,
+				Timestamp:     time.Now().Unix(),
+				Description:   "correction: " + t.Description,
+			})
+			if err != nil {
+				continue
+			}
+
+			return events.Events{
+				&td.TransferFailed{
+					Model: events.Model{
+						EventAggregateID: t.ID,
+						EventID:          uuid.Must(uuid.NewV4()),
+						EventAt:          time.Now(),
+					},
+				},
+			}, nil
+		}
 
 	case *td.TransferCompleted:
 		log.Println("Completed transfer", t.ID.String())
