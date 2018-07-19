@@ -2,7 +2,6 @@ package transfers
 
 import (
 	"context"
-	"errors"
 	"log"
 	"time"
 
@@ -10,11 +9,6 @@ import (
 	"github.com/vectorhacker/bank/internal/pkg/events"
 	td "github.com/vectorhacker/bank/internal/pkg/events/transfers"
 	pb "github.com/vectorhacker/bank/pb/accounts"
-)
-
-// Errors
-var (
-	ErrInvalidOperation = errors.New("invalid operation")
 )
 
 // State represents a transaction state
@@ -32,9 +26,9 @@ const (
 // Transfer representation
 type Transfer struct {
 	ID          uuid.UUID `gorm:"primary_key"`
-	State       State
 	FromAccount uuid.UUID
 	ToAccount   uuid.UUID
+	State       State
 	Amount      int64
 	Description string
 	accounts    pb.AccountsCommandClient `gorm:"-"`
@@ -48,7 +42,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 		log.Println("Began transfer", t.ID.String())
 		if t.State != Uninitialized {
 			log.Println("expected uninitialized state", t.State)
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		t.State = Begun
@@ -70,7 +64,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferDebitAccountBegun:
 		log.Println("Debiting transfer", t.ID.String())
 		if t.State != Begun {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		t.State = Transfering
@@ -111,7 +105,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferDebitFailed:
 		log.Println("Debit failed", t.ID.String())
 		if t.State != Transfering {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		t.State = Failed
@@ -119,7 +113,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferDebitCompleted:
 		log.Println("Debited transfer", t.ID.String())
 		if t.State != Transfering {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		return events.Events{
@@ -135,7 +129,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferCreditAccountBegun:
 		log.Println("Crediting transfer", t.ID.String())
 		if t.State != Transfering {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		ctx := context.Background()
@@ -174,7 +168,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferCreditCompleted:
 		log.Println("Credited transfer", t.ID.String())
 		if t.State != Transfering {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		return events.Events{
@@ -190,7 +184,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferCreditFailed:
 		log.Println("Credited transfer failed", t.ID.String())
 		if t.State != Transfering {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		ctx := context.Background()
@@ -220,7 +214,7 @@ func (t *Transfer) Handle(event events.Event) (events.Events, error) {
 	case *td.TransferCompleted:
 		log.Println("Completed transfer", t.ID.String())
 		if t.State != Transfering {
-			return nil, ErrInvalidOperation
+			return nil, ErrInvalidState
 		}
 
 		t.State = Completed

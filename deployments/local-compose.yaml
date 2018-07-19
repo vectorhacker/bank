@@ -72,11 +72,10 @@ services:
       - kafka
       - postgres
     environment:
-      CONSUL_ADDR: consul:8500
+      CONSUL_HTTP_ADDR: consul:8500
       DB_CONNECTION: 'postgres://bank:password123@postgres:5432/bank?sslmode=disable'
       KAFKA_PEERS: kafka:9092
-      SERVICE_ID: accounts1
-      BIND_ADDR: accounts:5000
+      SERVER_ADDR: accounts:5000
   transfers:
     image: bank/transfers:transfers
     networks:
@@ -87,12 +86,12 @@ services:
       - kafka
       - postgres
     environment:
-      CONSUL_ADDR: consul:8500
+      CONSUL_HTTP_ADDR: consul:8500
       DB_CONNECTION: 'postgres://bank:password123@postgres:5432/bank?sslmode=disable'
       KAFKA_PEERS: kafka:9092
-      SERVICE_ID: transfers1
-      BIND_ADDR: transfers:5000
+      SERVER_ADDR: transfers:5000
       GRPC_DIAL: linkerd:4141
+      SERIVCE_TAGS: saga
 
 networks:
   bank:

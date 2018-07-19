@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["flags.go"],
+    importmap = "vendor/github.com/jdextraze/go-gesclient/flags",
+    importpath = "github.com/jdextraze/go-gesclient/flags",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jdextraze/go-gesclient:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/client:go_default_library",
+    ],
+)

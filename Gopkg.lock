@@ -81,6 +81,23 @@
   version = "v0.8.1"
 
 [[projects]]
+  name = "github.com/jdextraze/go-gesclient"
+  packages = [
+    ".",
+    "client",
+    "common",
+    "flags",
+    "guid",
+    "internal",
+    "messages",
+    "operations",
+    "subscriptions",
+    "tasks"
+  ]
+  revision = "c753df888914137fda6bd883e0d97232c66831b7"
+  version = "v0.2.0"
+
+[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
@@ -116,6 +133,12 @@
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
+
+[[projects]]
+  name = "github.com/op/go-logging"
+  packages = ["."]
+  revision = "b2cb9fa56473e98db8caba80237377e83fe44db5"
+  version = "v1"
 
 [[projects]]
   name = "github.com/pierrec/lz4"
@@ -191,6 +214,8 @@
     "encoding",
     "encoding/proto",
     "grpclog",
+    "health",
+    "health/grpc_health_v1",
     "internal",
     "internal/backoff",
     "internal/channelz",
@@ -215,6 +240,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d3a00778a11c094363268cd70d6606a1ea0369e2b4332d447bafa4d5914ed0ee"
+  inputs-digest = "a51e917d49d8578408864bc7a968f5e095518cf36f51594762fb0a0fd672f94e"
   solver-name = "gps-cdcl"
   solver-version = 1

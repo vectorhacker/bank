@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "connection.go",
+        "logging.go",
+        "url_go17.go",
+        "url_go18.go",
+    ],
+    importmap = "vendor/github.com/jdextraze/go-gesclient",
+    importpath = "github.com/jdextraze/go-gesclient",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jdextraze/go-gesclient/client:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/internal:go_default_library",
+        "//vendor/github.com/op/go-logging:go_default_library",
+    ],
+)

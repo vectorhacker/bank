@@ -6,7 +6,7 @@ go_image(
     name = "accounts",
     # Override the base image.
     base = "@alpine_base//image",
-    embed = ["//cmd/accounts:go_default_library"],
+    embed = ["//services/accounts:go_default_library"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",
@@ -16,7 +16,7 @@ go_image(
     name = "transfers",
     # Override the base image.
     base = "@alpine_base//image",
-    embed = ["//cmd/transfers:go_default_library"],
+    embed = ["//services/transfers:go_default_library"],
     goarch = "amd64",
     goos = "linux",
     pure = "on",

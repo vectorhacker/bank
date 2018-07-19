@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "all_catchup_subscription.go",
+        "catchup_subscription.go",
+        "connect_to_persistent_subscription.go",
+        "logging.go",
+        "stream_catchup_subscription.go",
+        "subscription.go",
+        "volatile_event_store_subscription.go",
+        "volatile_subscription.go",
+    ],
+    importmap = "vendor/github.com/jdextraze/go-gesclient/subscriptions",
+    importpath = "github.com/jdextraze/go-gesclient/subscriptions",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/client:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/guid:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/messages:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/tasks:go_default_library",
+        "//vendor/github.com/op/go-logging:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+    ],
+)

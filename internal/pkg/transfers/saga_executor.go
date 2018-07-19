@@ -10,10 +10,11 @@ import (
 	pb "github.com/vectorhacker/bank/pb/accounts"
 )
 
-// Errors
 var (
-	ErrTransferBegun    = errors.New("transfer has already begun")
-	ErrBadTransferState = errors.New("cannot credit on bad transfer")
+	// ErrTransferBegun refers to when a transfer has already begun execution
+	ErrTransferBegun = errors.New("transfer has already begun")
+	// ErrInvalidState occurs when an invalid state is reachd
+	ErrInvalidState = errors.New("invalid state")
 )
 
 // Executor is a Saga Execution Engine

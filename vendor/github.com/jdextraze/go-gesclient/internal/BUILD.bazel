@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cluster_dns_endpoint_discoverer.go",
+        "connection.go",
+        "connection_logic_handler.go",
+        "endpoint_discoverer.go",
+        "event_handlers.go",
+        "logging.go",
+        "messages.go",
+        "node_endpoints.go",
+        "operation_item.go",
+        "operations_manager.go",
+        "persistent_subscription.go",
+        "simple_queued_handler.go",
+        "statistics.go",
+        "subscription_item.go",
+        "subscriptions_manager.go",
+    ],
+    importmap = "vendor/github.com/jdextraze/go-gesclient/internal",
+    importpath = "github.com/jdextraze/go-gesclient/internal",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jdextraze/go-gesclient/client:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/common:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/messages:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/operations:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/subscriptions:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/tasks:go_default_library",
+        "//vendor/github.com/op/go-logging:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+    ],
+)

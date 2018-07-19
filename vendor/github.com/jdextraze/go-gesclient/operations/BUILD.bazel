@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "append_to_stream.go",
+        "commit_transaction.go",
+        "convert_status_code.go",
+        "create_persistent_subscription.go",
+        "delete_persistent_subscription.go",
+        "delete_stream.go",
+        "logging.go",
+        "operation.go",
+        "read_all_events_backward.go",
+        "read_all_events_forward.go",
+        "read_event.go",
+        "read_stream_events_backward.go",
+        "read_stream_events_forward.go",
+        "start_transaction.go",
+        "transactional_write.go",
+        "update_persistent_subscription.go",
+    ],
+    importmap = "vendor/github.com/jdextraze/go-gesclient/operations",
+    importpath = "github.com/jdextraze/go-gesclient/operations",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/client:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/common:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/messages:go_default_library",
+        "//vendor/github.com/jdextraze/go-gesclient/tasks:go_default_library",
+        "//vendor/github.com/op/go-logging:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+    ],
+)

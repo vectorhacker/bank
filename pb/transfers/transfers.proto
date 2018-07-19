@@ -4,6 +4,8 @@ package transfers;
 
 service Transfers {
     rpc BeginTransfer (BeginTransferRequest) returns (BeginTransferResponse);
+    rpc FailDebit (FailDebitRequest) returns (FailDebitResponse);
+    rpc FailCredit (FailCreditRequest) returns (FailCreditResponse);
     // rpc CancelTransfer (CancelTransferRequest) returns (CancelTransferResponse);
 }
 
@@ -16,6 +18,22 @@ message BeginTransferRequest {
     
 message BeginTransferResponse {
     string ID = 1;
+}
+
+message FailDebitRequest {
+    string ID = 1;
+}
+
+message FailDebitResponse {
+
+}
+
+message FailCreditRequest {
+    string ID = 1;
+}
+
+message FailCreditResponse {
+
 }
 
 // message CancelTransferRequest {
