@@ -20,6 +20,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/dghubble/sling"
+  packages = ["."]
+  revision = "eb56e89ac5088bebb12eef3cb4b293300f43608b"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/eapache/go-resiliency"
   packages = ["breaker"]
   revision = "ea41b0fad31007accc7f806884dcdf3da98b79ce"
@@ -54,6 +60,12 @@
   name = "github.com/golang/snappy"
   packages = ["."]
   revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
   name = "github.com/hashicorp/consul"
@@ -138,6 +150,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/vectorhacker/goro"
+  packages = ["."]
+  revision = "416e842cb74b38946016f86d3b847a20aca9846c"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -212,6 +230,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f20e4314948507945a687efbfa42f1ef8df28b50f4c3149afeaf8a628c1ed633"
+  inputs-digest = "36260f5055baf8ac95b12b7d69c39224847bf94547aa3488c4c2716b907756a0"
   solver-name = "gps-cdcl"
   solver-version = 1
