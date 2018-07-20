@@ -21,8 +21,5 @@ go_test(
     name = "go_default_test",
     srcs = ["record_test.go"],
     embed = [":go_default_library"],
-    deps = [
-        "//internal/pkg/events:go_default_library",
-        "//vendor/github.com/satori/go.uuid:go_default_library",
-    ],
+    deps = ["//vendor/github.com/satori/go.uuid:go_default_library"],
 )

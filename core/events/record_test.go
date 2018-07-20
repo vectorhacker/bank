@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/satori/go.uuid"
-	"github.com/vectorhacker/bank/internal/pkg/events"
+	"github.com/vectorhacker/bank/core/events"
 )
 
 type MessageSent struct {

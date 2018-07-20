@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["system_names.go"],
-    importmap = "vendor/github.com/jdextraze/go-gesclient/common",
-    importpath = "github.com/jdextraze/go-gesclient/common",
-    visibility = ["//visibility:public"],
-)

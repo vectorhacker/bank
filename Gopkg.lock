@@ -41,7 +41,6 @@
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
-    "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
@@ -59,8 +58,8 @@
 [[projects]]
   name = "github.com/hashicorp/consul"
   packages = ["api"]
-  revision = "28141971f966e99916da2c5e461dd968746491cd"
-  version = "v1.2.0"
+  revision = "39f93f011e591c842acc8053a7f5972aa6e592fd"
+  version = "v1.2.1"
 
 [[projects]]
   branch = "master"
@@ -79,23 +78,6 @@
   packages = ["coordinate"]
   revision = "d6574a5bb1226678d7010325fb6c985db20ee458"
   version = "v0.8.1"
-
-[[projects]]
-  name = "github.com/jdextraze/go-gesclient"
-  packages = [
-    ".",
-    "client",
-    "common",
-    "flags",
-    "guid",
-    "internal",
-    "messages",
-    "operations",
-    "subscriptions",
-    "tasks"
-  ]
-  revision = "c753df888914137fda6bd883e0d97232c66831b7"
-  version = "v0.2.0"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
@@ -132,13 +114,7 @@
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
-  revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
-
-[[projects]]
-  name = "github.com/op/go-logging"
-  packages = ["."]
-  revision = "b2cb9fa56473e98db8caba80237377e83fe44db5"
-  version = "v1"
+  revision = "f15292f7a699fcc1a38a80977f80a046874ba8ac"
 
 [[projects]]
   name = "github.com/pierrec/lz4"
@@ -172,7 +148,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "cffdcf672aee934982473246bc7e9a8ba446aa9b"
+  revision = "a680a1efc54dd51c040b3b5ce4939ea3cf2ea0d1"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -199,7 +175,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "e92b116572682a5b432ddd840aeaba2a559eeff1"
+  revision = "fedd2861243fd1a8152376292b921b394c7bef7e"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -214,8 +190,6 @@
     "encoding",
     "encoding/proto",
     "grpclog",
-    "health",
-    "health/grpc_health_v1",
     "internal",
     "internal/backoff",
     "internal/channelz",
@@ -224,8 +198,6 @@
     "metadata",
     "naming",
     "peer",
-    "reflection",
-    "reflection/grpc_reflection_v1alpha",
     "resolver",
     "resolver/dns",
     "resolver/passthrough",
@@ -240,6 +212,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a51e917d49d8578408864bc7a968f5e095518cf36f51594762fb0a0fd672f94e"
+  inputs-digest = "f20e4314948507945a687efbfa42f1ef8df28b50f4c3149afeaf8a628c1ed633"
   solver-name = "gps-cdcl"
   solver-version = 1
