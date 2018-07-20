@@ -1,0 +1,18 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load(
+    "@io_bazel_rules_docker//container:container.bzl",
+    "container_image",
+    "container_bundle",
+)
+
+DOCKERIZED_IMAGES = {
+    "bank/accounts:accounts": "//build/package:accounts",
+    "bank/transfers:transfers": "//build/package:transfers",
+}
+
+container_bundle(
+    name = "docker",
+    images = DOCKERIZED_IMAGES,
+)
