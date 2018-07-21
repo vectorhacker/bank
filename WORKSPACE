@@ -16,7 +16,7 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 gazelle_dependencies()
 
 
-# docker
+# docker rules
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
@@ -50,3 +50,100 @@ load(
 )
 
 _go_image_repos()
+
+## Java deps
+maven_jar(
+    name = "com_geteventstore_eventstore_client",
+    artifact = "com.geteventstore:eventstore-client_2.12:5.0.8",
+)
+
+maven_jar(
+    name = "org_apache_kafka_kafka_clients",
+    artifact = "org.apache.kafka:kafka-clients:1.1.0",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_actor",
+    artifact = "com.typesafe.akka:akka-actor_2.12:2.5.13",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_stream",
+    artifact = "com.typesafe.akka:akka-stream_2.12:2.5.13",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_testkit",
+    artifact = "com.typesafe.akka:akka-testkit_2.12:2.5.13",
+)
+
+maven_jar(
+    name = "com_typesafe_config",
+    artifact = "com.typesafe:config:1.3.3",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_http",
+    artifact = "com.typesafe.akka:akka-http_2.12:10.1.3",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_http_testkit",
+    artifact = "com.typesafe.akka:akka-http-testkit_2.12:10.1.3",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_http_core",
+    artifact = "com.typesafe.akka:akka-http-core_2.12:10.1.3",
+)
+
+maven_jar(
+    name = "com_typesafe_akka_akka_parsing",
+    artifact = "com.typesafe.akka:akka-parsing_2.12:10.1.3",
+)
+
+maven_jar(
+    name = "org_reactivestreams_reactive_streams",
+    artifact = "org.reactivestreams:reactive-streams:1.0.2",
+)
+
+maven_jar(
+    name = "com_google_protobuf_protobuf_java",
+    artifact = "com.google.protobuf:protobuf-java:3.6.0",
+)
+
+maven_jar(
+    name = "joda_time_joda_time",
+    artifact = "joda-time:joda-time:2.10",
+)
+
+maven_jar(
+    name = "org_joda_joda_convert",
+    artifact = "org.joda:joda-convert:2.1",
+)
+
+maven_jar(
+    name = "org_json_json",
+    artifact = "org.json:json:20180130",
+)
+
+# Scala compiler
+rules_scala_version="64faf06a4932a9a1d3378b6ba1a6d77479cefef3" # update this as needed
+
+http_archive(
+    name = "io_bazel_rules_scala",
+    url = "https://github.com/bazelbuild/rules_scala/archive/%s.zip"%rules_scala_version,
+    type = "zip",
+    strip_prefix= "rules_scala-%s" % rules_scala_version,
+)
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
+
+scala_repositories(("2.12.6", {
+    "scala_compiler": "3023b07cc02f2b0217b2c04f8e636b396130b3a8544a8dfad498a19c3e57a863",
+    "scala_library": "f81d7144f0ce1b8123335b72ba39003c4be2870767aca15dd0888ba3dab65e98",
+    "scala_reflect": "ffa70d522fc9f9deec14358aa674e6dd75c9dfa39d4668ef15bb52f002ce99fa"
+}))
+
+load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
+scala_register_toolchains()
