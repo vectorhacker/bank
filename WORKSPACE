@@ -44,6 +44,13 @@ container_pull(
     tag = "3.8",
 )
 
+container_pull(
+  name = "java_base",
+  registry = "index.docker.io",
+  repository = "library/openjdk",
+  tag = "8u171-jre-alpine3.8",
+)
+
 load(
     "@io_bazel_rules_docker//go:image.bzl",
     _go_image_repos = "repositories",
@@ -125,6 +132,16 @@ maven_jar(
 maven_jar(
     name = "org_json_json",
     artifact = "org.json:json:20180130",
+)
+
+maven_jar(
+    name = "org_slf4j_slf4j_api",
+    artifact = "org.slf4j:slf4j-api:1.7.25",
+)
+
+maven_jar(
+    name = "org_slf4j_slf4j_simple",
+    artifact = "org.slf4j:slf4j-simple:1.7.25",
 )
 
 # Scala compiler

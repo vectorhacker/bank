@@ -2,10 +2,8 @@ package com.bank.service.projections;
 
 import org.json.JSONObject;
 
-public class BinaryRecord implements Record {
+public class BinaryRecord extends Record {
     private byte payload[];
-
-    private String type;
 
     BinaryRecord(String type, byte payload[]) {
         this.payload = payload;

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/Shopify/sarama"
+	"github.com/pkg/errors"
 )
 
 // Dispatcher is responsible for sending messages to the event log
@@ -44,12 +45,12 @@ func (d *KafkaDispatcher) Dispatch(events ...Event) error {
 	for i, event := range events {
 		record, err := d.serializer.Serialize(event)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "unable to serialize event")
 		}
 
 		data, err := json.Marshal(record)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "unable to marshal record")
 		}
 
 		message := &sarama.ProducerMessage{

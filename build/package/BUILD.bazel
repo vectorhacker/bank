@@ -21,3 +21,13 @@ go_image(
     goos = "linux",
     pure = "on",
 )
+
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+
+container_image(
+    name = "projections",
+    # References container_pull from WORKSPACE (above)
+    base = "@java_base//image",
+    files = ["//service.projections:Projections.jar"],
+    cmd = ["Projections.jar"]
+)

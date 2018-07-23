@@ -20,12 +20,6 @@
   version = "v1.1.0"
 
 [[projects]]
-  name = "github.com/dghubble/sling"
-  packages = ["."]
-  revision = "eb56e89ac5088bebb12eef3cb4b293300f43608b"
-  version = "v1.1.0"
-
-[[projects]]
   name = "github.com/eapache/go-resiliency"
   packages = ["breaker"]
   revision = "ea41b0fad31007accc7f806884dcdf3da98b79ce"
@@ -60,12 +54,6 @@
   name = "github.com/golang/snappy"
   packages = ["."]
   revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/google/go-querystring"
-  packages = ["query"]
-  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
   name = "github.com/hashicorp/consul"
@@ -138,6 +126,12 @@
   version = "v2.0.3"
 
 [[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/rcrowley/go-metrics"
   packages = ["."]
@@ -147,12 +141,6 @@
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/vectorhacker/goro"
-  packages = ["."]
-  revision = "416e842cb74b38946016f86d3b847a20aca9846c"
 
 [[projects]]
   branch = "master"
@@ -230,6 +218,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "36260f5055baf8ac95b12b7d69c39224847bf94547aa3488c4c2716b907756a0"
+  inputs-digest = "65a118de6f09057f128884d1a3c28380633d13838ba2693ec8bf3155d12fca62"
   solver-name = "gps-cdcl"
   solver-version = 1

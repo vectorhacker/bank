@@ -2,8 +2,9 @@ package events
 
 import (
 	"encoding/json"
-	"errors"
 	"reflect"
+
+	"github.com/pkg/errors"
 )
 
 // Errors
@@ -59,7 +60,7 @@ func (s JSONSerializer) Deserialize(r Record) (Event, error) {
 
 	ev := reflect.New(v).Interface().(Event)
 	if err := json.Unmarshal(r.Payload, ev); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "unable to umarshal event into JSON")
 	}
 
 	return ev, nil
@@ -70,7 +71,7 @@ func (s JSONSerializer) Deserialize(r Record) (Event, error) {
 func (s *JSONSerializer) Serialize(ev Event) (Record, error) {
 	data, err := json.Marshal(ev)
 	if err != nil {
-		return Record{}, err
+		return Record{}, errors.Wrap(err, "unable to marshal event into json")
 	}
 
 	t := reflect.TypeOf(ev)

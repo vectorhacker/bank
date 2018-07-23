@@ -18,6 +18,9 @@ scala_binary(
         "@com_typesafe_config//jar",
         "@com_geteventstore_eventstore_client//jar",
         "@org_json_json//jar",
+        "@org_apache_kafka_kafka_clients//jar",
+        "@org_slf4j_slf4j_api//jar",
+        "@org_slf4j_slf4j_simple//jar",
     ],
     main_class = "com.bank.service.projections.Projections",
 )

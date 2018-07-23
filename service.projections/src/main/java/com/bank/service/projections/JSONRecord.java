@@ -2,10 +2,8 @@ package com.bank.service.projections;
 
 import org.json.JSONObject;
 
-public class JSONRecord implements Record {
+public class JSONRecord extends Record {
     private JSONObject payload;
-
-    private String type;
 
     JSONRecord(String type, JSONObject payload) {
         this.payload = payload;
