@@ -3,14 +3,15 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:4.1.0
     restart: always
-    networks: 
+    networks:
       - bank
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+
   kafka:
     image: confluentinc/cp-kafka:4.1.0
     restart: always
-    networks: 
+    networks:
       - bank
     depends_on:
       - zookeeper
@@ -19,13 +20,17 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  topics:
-    image: confluentinc/cp-kafka:4.1.0
-    networks: 
+  eventstore:
+    image: eventstore/eventstore:release-4.1.0
+    restart: always
+    networks:
       - bank
-    depends_on:
-      - zookeeper
-    command: kafka-topics --create --topic accounts --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181 && kafka-topics --create --topic transfers --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:218
+    ports:
+      - 2113:2113
+    environment:
+      EVENTSTORE_MEM_DB: "True"
+      EVENTSTORE_BETTER_ORDERING: "True"
+
   postgres:
     image: postgres
     restart: always
@@ -37,17 +42,17 @@ services:
       POSTGRES_DB: bank
     ports:
       - 5432:5432
-    
+
   consul:
     image: consul:1.2.0
     restart: always
     networks:
       - bank
-    environment: 
+    environment:
       CONSUL_LOCAL_CONFIG: '{"leave_on_terminate": true}'
-    ports: 
+    ports:
       - 8500:8500
-  
+
   linkerd:
     image: buoyantio/linkerd:1.4.2
     networks:
@@ -57,7 +62,7 @@ services:
     depends_on:
       - consul
     ports:
-      - 9990:9990 
+      - 9990:9990
       - 4141:4141
     volumes:
       - ./linkerd-local.yaml:/config.yaml
@@ -67,7 +72,7 @@ services:
     networks:
       - bank
     restart: always
-    depends_on: 
+    depends_on:
       - consul
       - kafka
       - postgres
@@ -76,12 +81,13 @@ services:
       DB_CONNECTION: 'postgres://bank:password123@postgres:5432/bank?sslmode=disable'
       KAFKA_PEERS: kafka:9092
       SERVER_ADDR: accounts:5000
+
   transfers:
     image: bank/transfers:transfers
     networks:
       - bank
     restart: always
-    depends_on: 
+    depends_on:
       - consul
       - kafka
       - postgres

@@ -14,7 +14,7 @@ go_library(
         "//core/events:go_default_library",
         "//service.accounts/pb:go_default_library",
         "//service.accounts/pkg/events:go_default_library",
-        "//vendor/github.com/jinzhu/gorm:go_default_library",
-        "//vendor/github.com/satori/go.uuid:go_default_library",
+        "@com_github_jinzhu_gorm//:go_default_library",
+        "@com_github_satori_go_uuid//:go_default_library",
     ],
 )

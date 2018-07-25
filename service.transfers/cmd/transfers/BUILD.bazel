@@ -13,9 +13,9 @@ go_library(
         "//service.transfers/internal/pkg/transfers:go_default_library",
         "//service.transfers/pb:go_default_library",
         "//service.transfers/pkg/events:go_default_library",
-        "//vendor/github.com/jinzhu/gorm:go_default_library",
-        "//vendor/github.com/jinzhu/gorm/dialects/postgres:go_default_library",
-        "//vendor/google.golang.org/grpc:go_default_library",
+        "@com_github_jinzhu_gorm//:go_default_library",
+        "@com_github_jinzhu_gorm//dialects/postgres:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
 

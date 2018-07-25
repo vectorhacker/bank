@@ -18,6 +18,9 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Vendor folder
+vendor
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

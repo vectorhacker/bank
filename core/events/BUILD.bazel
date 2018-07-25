@@ -11,9 +11,10 @@ go_library(
     importpath = "github.com/vectorhacker/bank/core/events",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/Shopify/sarama:go_default_library",
-        "//vendor/github.com/bsm/sarama-cluster:go_default_library",
-        "//vendor/github.com/satori/go.uuid:go_default_library",
+        "@com_github_bsm_sarama_cluster//:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+        "@com_github_satori_go_uuid//:go_default_library",
+        "@com_github_shopify_sarama//:go_default_library",
     ],
 )
 
@@ -21,5 +22,5 @@ go_test(
     name = "go_default_test",
     srcs = ["record_test.go"],
     embed = [":go_default_library"],
-    deps = ["//vendor/github.com/satori/go.uuid:go_default_library"],
+    deps = ["@com_github_satori_go_uuid//:go_default_library"],
 )

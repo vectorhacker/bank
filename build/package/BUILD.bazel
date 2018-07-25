@@ -28,6 +28,6 @@ container_image(
     name = "projections",
     # References container_pull from WORKSPACE (above)
     base = "@java_base//image",
+    cmd = ["Projections.jar"],
     files = ["//service.projections:Projections.jar"],
-    cmd = ["Projections.jar"]
 )
